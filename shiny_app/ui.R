@@ -1,4 +1,4 @@
-# Define UI for app that draws a histogram ----
+# Define UI for app that predicts how much strength increase with and without creatine ----
 ui <- fluidPage(
   
   # App title ----
@@ -28,9 +28,7 @@ ui <- fluidPage(
                                       selected = 'm'),
                           
                           #Years Trained Input
-                          selectInput("selectYearsTrained", label = h3("Years Trained"), 
-                                      choices = list("1" = 1, "2" = 2, "3" = 3,"4" = 4,"5" = 5,"6" = 6,"7" = 7,"8" = 8,"9" = 9,"10" = 10), 
-                                      selected = 1),
+                          textInput("selectYearsTrained", label = h3("Years Trained"), value =1),
                           
                           #Bench Output
                           textInput("inputBenchWeight", label = h3("Bench weight input"), placeholder = "Enter Bench Weight..."),
@@ -46,8 +44,14 @@ ui <- fluidPage(
                           textOutput("inputGenderInfo"),
                           textOutput("inputYearsInfo"),
                           textOutput("inputBenchInfo"),
-                          textOutput("inputSquatInfo")
+                          textOutput("inputSquatInfo"),
                           
+                          
+                          p("Here is your potential without creatine:"),
+                          #plotOutput(outputId = "noCreatineModelPlot)
+                          textOutput("asdf"),
+                          p("Here is FULL POTENTIAL:")
+                          #plotOutput(outputId = "noCreatineModelPlot)
                           #Output: ModelPlot 
                           # plotOutput(outputId = "modelPlot")
                         )
