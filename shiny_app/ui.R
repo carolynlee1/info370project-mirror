@@ -1,5 +1,9 @@
+
+library(shinythemes)
+
 # Define UI for app that predicts how much strength increase with and without creatine ----
-ui <- fluidPage(
+
+ui <- fluidPage( theme = shinytheme("cerulean"),
   
   # App title ----
   titlePanel("Team Awesome Possum"),
@@ -15,7 +19,7 @@ ui <- fluidPage(
              ),
              tabPanel("Unlock your Potential",
                       sidebarLayout(
-                        
+
                         # Sidebar panel for inputs ----
                         sidebarPanel(
                           
@@ -28,32 +32,38 @@ ui <- fluidPage(
                                       selected = 'm'),
                           
                           #Years Trained Input
-                          textInput("selectYearsTrained", label = h3("Years Trained"), value =1),
+                          numericInput("selectYearsTrained", label = h3("Years Trained"), value = 1),
                           
                           #Bench Output
-                          textInput("inputBenchWeight", label = h3("Bench weight input"), placeholder = "Enter Bench Weight..."),
+                          textInput("inputBenchWeight", label = h3("Bench weight input"), value = 135),
                           
                           #Squat Input
-                          textInput("inputSquatWeight", label = h3("Squat weight input"), placeholder = "Enter Squat Weight...")
+                          textInput("inputSquatWeight", label = h3("Squat weight input"), value = 225)
                         ),
                         
                         # Main panel for displaying outputs ----
                         mainPanel(
-                          #Testing to see if inputs are going in
-                          textOutput("inputBodyInfo"),
-                          textOutput("inputGenderInfo"),
-                          textOutput("inputYearsInfo"),
-                          textOutput("inputBenchInfo"),
-                          textOutput("inputSquatInfo"),
+                        
+                          tags$strong("About the calculator:"),
+                          p("When committing to a fitness journey, people often debate
+                            whether taking supplements would be appropriate. The effect of supplements,
+                            particularly creatine, will vary between people, and depends on factors such 
+                            as body weight, current strength, etc. To guide your decision and estimate 
+                            your potential growth, our calculator takes the most important factors and reports
+                            your projected fitness growth, with and without creatine use."),
+                          br(),
                           
+                          tags$strong("Here are your possible lifts without creatine:"),
+                          textOutput("no_creatine_response"),
+                          br(),
+                          tags$strong("Here are your possible lifts with creatine:"),
+                          textOutput("yes_creatine_response"),
+
                           
-                          p("Here is your potential without creatine:"),
-                          #plotOutput(outputId = "noCreatineModelPlot)
-                          textOutput("asdf"),
-                          p("Here is FULL POTENTIAL:")
-                          #plotOutput(outputId = "noCreatineModelPlot)
-                          #Output: ModelPlot 
-                          # plotOutput(outputId = "modelPlot")
+                          br(),
+                          tags$strong("Here is a graphical comparison"),
+                          plotlyOutput("bench_plot")
+                 
                         )
              )
     )
