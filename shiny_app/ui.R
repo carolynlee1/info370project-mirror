@@ -28,11 +28,14 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                           
                           #Gender Input
                           selectInput("selectGender", label = h3("Sex Input"), 
-                                      choices = list("Male" = 'm', "Female" = 'f'), 
+                                      choices = list("Male" = 'Male', "Female" = 'Female'), 
                                       selected = 'm'),
                           
                           #Years Trained Input
                           numericInput("selectYearsTrained", label = h3("Years Trained Input"), value = 2),
+                          
+                          #Age Input 22-27
+                          numericInput("inputAge", label = h3("Age Input"), value = 23),
                           
                           #Bench Output
                           textInput("inputBenchWeight", label = h3("Bench Weight Input"), value = 135),
@@ -44,6 +47,9 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                         # Main panel for displaying outputs ----
                         mainPanel(
                         
+                          br(),
+                          #plotlyOutput("bodyweight_plot"),
+                          
                           tags$strong("About the calculator:"),
                           p("When committing to a fitness journey, people often debate
                             whether taking supplements would be appropriate. The effect of supplements,
