@@ -24,21 +24,21 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                         sidebarPanel(
                           
                           #Body Weight input
-                          textInput("inputBodyWeight", label = h3("Bodyweight input"), placeholder = "Enter Weight..."),
+                          textInput("inputBodyWeight", label = h3("Bodyweight Input"), placeholder = "Enter Weight..."),
                           
                           #Gender Input
-                          selectInput("selectGender", label = h3("Gender"), 
-                                      choices = list("Male" = 'm', "Female" = 'f', "Other" = 'o'), 
+                          selectInput("selectGender", label = h3("Sex Input"), 
+                                      choices = list("Male" = 'm', "Female" = 'f'), 
                                       selected = 'm'),
                           
                           #Years Trained Input
-                          numericInput("selectYearsTrained", label = h3("Years Trained"), value = 1),
+                          numericInput("selectYearsTrained", label = h3("Years Trained Input"), value = 2),
                           
                           #Bench Output
-                          textInput("inputBenchWeight", label = h3("Bench weight input"), value = 135),
+                          textInput("inputBenchWeight", label = h3("Bench Weight Input"), value = 135),
                           
                           #Squat Input
-                          textInput("inputSquatWeight", label = h3("Squat weight input"), value = 225)
+                          textInput("inputSquatWeight", label = h3("Squat Weight Input"), value = 225)
                         ),
                         
                         # Main panel for displaying outputs ----
@@ -54,15 +54,17 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                           br(),
                           
                           tags$strong("Here are your possible lifts without creatine:"),
-                          textOutput("no_creatine_response"),
+                          htmlOutput("no_creatine_response"),
                           br(),
                           tags$strong("Here are your possible lifts with creatine:"),
-                          textOutput("yes_creatine_response"),
+                          htmlOutput("yes_creatine_response"),
 
+                          htmlOutput("text"),
                           
                           br(),
-                          tags$strong("Here is a graphical comparison"),
-                          plotlyOutput("bench_plot")
+                          tags$strong("Here is a graphical comparison:"),
+                          br(),
+                          plotlyOutput("grouped_plot")
                  
                         )
              )
