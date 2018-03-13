@@ -1,5 +1,5 @@
 
-d3 <- read.csv("~/370/group-formation-for-projects-team-awesome-possum/condensed.csv")
+d3 <- read.csv("~/370/group-formation-for-projects-team-awesome-possum/initial training and sex data.csv")
 library(ggplot2)
 library(rpart)
 library(statisticalModeling)
