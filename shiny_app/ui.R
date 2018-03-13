@@ -1,5 +1,9 @@
+
+library(shinythemes)
+
 # Define UI for app that predicts how much strength increase with and without creatine ----
-ui <- fluidPage(
+
+ui <- fluidPage( theme = shinytheme("cerulean"),
   
   # App title ----
   titlePanel("Team Awesome Possum"),
@@ -15,45 +19,59 @@ ui <- fluidPage(
              ),
              tabPanel("Unlock your Potential",
                       sidebarLayout(
-                        
+
                         # Sidebar panel for inputs ----
                         sidebarPanel(
                           
                           #Body Weight input
-                          textInput("inputBodyWeight", label = h3("Bodyweight input"), placeholder = "Enter Weight..."),
+                          textInput("inputBodyWeight", label = h3("Bodyweight Input"), placeholder = "Enter Weight..."),
                           
                           #Gender Input
-                          selectInput("selectGender", label = h3("Gender"), 
-                                      choices = list("Male" = 'm', "Female" = 'f', "Other" = 'o'), 
+                          selectInput("selectGender", label = h3("Sex Input"), 
+                                      choices = list("Male" = 'Male', "Female" = 'Female'), 
                                       selected = 'm'),
                           
                           #Years Trained Input
-                          textInput("selectYearsTrained", label = h3("Years Trained"), value =1),
+                          numericInput("selectYearsTrained", label = h3("Years Trained Input"), value = 2),
+                          
+                          #Age Input 22-27
+                          numericInput("inputAge", label = h3("Age Input"), value = 23),
                           
                           #Bench Output
-                          textInput("inputBenchWeight", label = h3("Bench weight input"), placeholder = "Enter Bench Weight..."),
+                          textInput("inputBenchWeight", label = h3("Bench Weight Input"), value = 135),
                           
                           #Squat Input
-                          textInput("inputSquatWeight", label = h3("Squat weight input"), placeholder = "Enter Squat Weight...")
+                          textInput("inputSquatWeight", label = h3("Squat Weight Input"), value = 225)
                         ),
                         
                         # Main panel for displaying outputs ----
                         mainPanel(
-                          #Testing to see if inputs are going in
-                          textOutput("inputBodyInfo"),
-                          textOutput("inputGenderInfo"),
-                          textOutput("inputYearsInfo"),
-                          textOutput("inputBenchInfo"),
-                          textOutput("inputSquatInfo"),
+                        
+                          br(),
+                          #plotlyOutput("bodyweight_plot"),
                           
+                          tags$strong("About the calculator:"),
+                          p("When committing to a fitness journey, people often debate
+                            whether taking supplements would be appropriate. The effect of supplements,
+                            particularly creatine, will vary between people, and depends on factors such 
+                            as body weight, current strength, etc. To guide your decision and estimate 
+                            your potential growth, our calculator takes the most important factors and reports
+                            your projected fitness growth, with and without creatine use."),
+                          br(),
                           
-                          p("Here is your potential without creatine:"),
-                          #plotOutput(outputId = "noCreatineModelPlot)
-                          textOutput("asdf"),
-                          p("Here is FULL POTENTIAL:")
-                          #plotOutput(outputId = "noCreatineModelPlot)
-                          #Output: ModelPlot 
-                          # plotOutput(outputId = "modelPlot")
+                          tags$strong("Here are your possible lifts without creatine:"),
+                          htmlOutput("no_creatine_response"),
+                          br(),
+                          tags$strong("Here are your possible lifts with creatine:"),
+                          htmlOutput("yes_creatine_response"),
+
+                          htmlOutput("text"),
+                          
+                          br(),
+                          tags$strong("Here is a graphical comparison:"),
+                          br(),
+                          plotlyOutput("grouped_plot")
+                 
                         )
              )
     )
