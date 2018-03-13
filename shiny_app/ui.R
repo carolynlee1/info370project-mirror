@@ -1,10 +1,9 @@
 
 library(shinythemes)
-
 # Define UI for app that predicts how much strength increase with and without creatine ----
 
 ui <- fluidPage( theme = shinytheme("cerulean"),
-  
+                 
   # App title ----
   titlePanel("Team Awesome Possum"),
   
@@ -12,6 +11,9 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
              tabPanel("About the project",
                         mainPanel(
                           h1("Welcome to Project Creatine"),
+                          tags$img(src='group_photo.jpg', height = 600, width = 800),
+                          tags$strong("Our mission:"),
+                          br(),
                           p("Our group wanted to explore about creatine and its effects on workout. We were interested 
                               about exploring various meta-analysis in order to create our own model to help those unlock
                               their workout potential.")
@@ -23,8 +25,8 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                         # Sidebar panel for inputs ----
                         sidebarPanel(
                           
-                          #Body Weight input
-                          textInput("inputBodyWeight", label = h3("Bodyweight Input"), placeholder = "Enter Weight..."),
+                          #Age Input
+                          numericInput("inputAge", label = h3("Age Input"), value = 23),
                           
                           #Gender Input
                           selectInput("selectGender", label = h3("Sex Input"), 
@@ -34,8 +36,9 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                           #Years Trained Input
                           numericInput("selectYearsTrained", label = h3("Years Trained Input"), value = 2),
                           
-                          #Age Input 22-27
-                          numericInput("inputAge", label = h3("Age Input"), value = 23),
+                          #Body Weight input
+                          textInput("inputBodyWeight", label = h3("Bodyweight Input"), value = "60"),
+                          radioButtons("inputWeightMeasure", label = h3("Unit of Measurement"), choices = c("kgs", "pounds")),
                           
                           #Bench Output
                           textInput("inputBenchWeight", label = h3("Bench Weight Input"), value = 135),
@@ -46,10 +49,7 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                         
                         # Main panel for displaying outputs ----
                         mainPanel(
-                        
-                          br(),
-                          #plotlyOutput("bodyweight_plot"),
-                          
+
                           tags$strong("About the calculator:"),
                           p("When committing to a fitness journey, people often debate
                             whether taking supplements would be appropriate. The effect of supplements,
@@ -60,12 +60,18 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                           br(),
                           
                           tags$strong("Here are your possible lifts without creatine:"),
-                          htmlOutput("no_creatine_response"),
+                          htmlOutput("no_creatine_response_lifts"),
                           br(),
                           tags$strong("Here are your possible lifts with creatine:"),
-                          htmlOutput("yes_creatine_response"),
+                          htmlOutput("yes_creatine_response_lifts"),
 
-                          htmlOutput("text"),
+                          br(),
+                          tags$strong("Here is how much you would weigh before and after:"),
+                          br(),
+                          htmlOutput("yes_creatine_response_bodyweight"),
+                          htmlOutput("no_creatine_response_bodyweight"),
+                          
+                          br(),
                           
                           br(),
                           tags$strong("Here is a graphical comparison:"),
