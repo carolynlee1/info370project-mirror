@@ -15,8 +15,8 @@ Insert reading in the datafile and maybe show the first few rows
 
 ```{r}
 # read csv
-Rawson <- read.csv("../inital training and sex data.csv")
-Murphy <- read.csv("../bodyweight.data.csv")
+Rawson <- read.csv("./initial training and sex data.csv")
+Murphy <- read.csv("./bodyweight-data.csv")
 #show first 6 lines of data sets
 head(Rawson)
 head(Murphy)
@@ -63,9 +63,6 @@ barplot(main="Body Mass (kg), Placebo", as.matrix(d2[2, c(3, 4, 5)]),
 
 The effects of a supplement on a person’s body can be difficult to simply guess, as it depends on multiple factors. Thus, a calculator that takes these factors as inputs and models improvements helps quantify and customize the originally arbitrary numbers. By simply providing these values, our user is better informed about the potential impact of creatine on their body, and is able to determine whether the differences in body mass, weight lifted, etc. are aligned with their fitness goals. We determined that it was important to include the impact of non-creatine as an explicit baseline, because outcomes such as the weight lifted will naturally increase as a user continues to exercise. Our application helps users decide if they would rather see the non-creatine changes in their body, or the creatine changes in their body.
 
-```{r}
-
-```
 
 ## Assumptions and Limitations
 
@@ -74,17 +71,3 @@ In our analysis we made assumptions on the people who would be using our tool. W
 ## Potential Future Work
 
 To go further with this project, the first step would be to obtain a better suited data set for the analysis we wanted to do. The best way to go about this would be to conduct our own study and collect the data that we identified as important in the causal loop diagram. Once the data is obtained, the models could be expanded to include time, how intense and often a participant workout,  muscle growth, amount of creatine consumption, and diet. With these variables, the relationship between creatine and working out would be simulated more accurately to how it is in the real world. Then we would add these models to our artifact, where our users will be shown important information to help them decide if they want to take creatine or not.
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
