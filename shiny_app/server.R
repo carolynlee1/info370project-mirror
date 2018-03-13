@@ -5,40 +5,8 @@ library(plotly)
 
 server <- function(input, output) {
   
-
-  # output$bench_plot<- renderPlotly({plot_ly( x=c("With Creatine", "Without Creatine"), 
-  #                                    y=c( predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-  #                                                                     With.or.Without ="With")), 
-  #                                         predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-  #                                                                     With.or.Without ="Without"))), type="bar", 
-  #                                    marker = list(color = c('purple', 'gold'))) %>%  
-  #     layout(title = "Bench Press Improvement", xaxis = list(title = "Creatine Usage"), yaxis = list(title = "Percentage of Increase"))
-  #   })
-  # 
-  # 
-  # 
-  # output$squat_plot <- renderPlotly({plot_ly( x=c("With Creatine", "Without Creatine"),
-  #                                           y=c( predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-  #                                                                            With.or.Without ="With")),
-  #                                                predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-  #                                                                            With.or.Without ="Without"))), type="bar",
-  #                                           marker = list(color = c('purple', 'gold'))) %>%
-  #     layout(title = "Bench Press Improvement", xaxis = list(title = "Creatine Usage"), yaxis = list(title = "Percentage of Increase"))
-  # })
-  
-  #### not used right now but may be used later
-  # output$bodyweight_plot <- renderPlotly({plot_ly( x=c("With Creatine", "Without Creatine"),
-  #                                             y=c( predict(bodyMassModel,  data.frame(Age = input$inputAge,
-  #                                                                              Creatine=1)),
-  #                                                  predict(bodyMassModel,  data.frame(Age = input$inputAge,
-  #                                                                                     Creatine=0))), type="bar",
-  #                                             marker = list(color = c('purple', 'gold'))) %>%
-  #     layout(title = "Bench Press Improvement", xaxis = list(title = "Creatine Usage"), yaxis = list(title = "Percentage of Increase"))
-  # })
-  # 
-  
-
-  
+  ### This renders a Plotly Grouped Bar Chart that takes in inputs from initial training, 
+  ### and gender,in order to predict how much increase will be gained for bench press and squats.
   output$grouped_plot <-  renderPlotly({
     with_creatine_data <- c(predict(model1,  data.frame(Initial.Training = input$selectYearsTrained,
                                                         Creatine..y.n.="Y", Sex = input$selectGender)), 
@@ -65,40 +33,104 @@ server <- function(input, output) {
              yaxis = list(title = "Percentage of Increase"))
   })
    
-
-
-  output$yes_creatine_response <- reactive({
+  output$yes_creatine_response_bodyweight <- reactive({
+    weight_amount <- predict(bodyMassModel, data.frame(Age = input$inputAge, Creatine = c(1)))
+    weight_amount <- as.numeric(weight_amount)
+    round(weight_amount, digits = 2)
+    new_weight <- weight_amount + as.numeric(input$inputBodyWeight)
+    
+    if(input$inputWeightMeasure == "kgs") {
+      text <- paste("If you currently weigh <b>", input$inputBodyWeight,
+                    "</b> kgs ", 
+                    ". You would go from weighing <b>", input$inputBodyWeight, "</b> kgs to weighing
+                    a <b>",  round(new_weight, digits = 2), "</b> kgs.", sep = "")   
+    } else {
+      new_weight <- (weight_amount * 2.2) + as.numeric(input$inputBodyWeight) 
+      
+      text <- paste("If you currently weigh <b>", input$inputBodyWeight,
+                    "</b> lbs ", 
+                    ". You would go from weighing <b>", input$inputBodyWeight, "</b> lbs to weighing
+                    a <b>",  round(new_weight, digits = 2), "</b> lbs", sep = "")
+  
+    }
+  })
+  
+  
+  output$no_creatine_response_bodyweight <- reactive({
+    weight_amount <- predict(bodyMassModel, data.frame(Age = input$inputAge, Creatine = c(0)))
+    weight_amount <- as.numeric(weight_amount)
+    round(weight_amount, digits = 2)
+    new_weight <- weight_amount + as.numeric(input$inputBodyWeight)
+    
+    if(input$inputWeightMeasure == "kgs") {
+      text <- paste("If you currently weigh <b>", input$inputBodyWeight,
+                    "</b> kgs. You would go from weighing <b>", input$inputBodyWeight, "</b> kgs to weighing
+                    a <b>",  round(new_weight, digits = 2), "</b> kgs.", sep = "")   
+    } else {
+      new_weight <- (weight_amount * 2.2) + as.numeric(input$inputBodyWeight) 
+      
+      text <- paste("If you currently weigh <b>", input$inputBodyWeight,
+                    "</b> lbs. You would go from weighing <b>", input$inputBodyWeight, "</b> lbs to weighing
+                    a <b>",  round(new_weight, digits = 2), "</b> lbs", sep = "")
+      
+    }
+    
+  })
+    
+  ### This creates a message displaying how much increase would happen if creatine was taken.
+  output$yes_creatine_response_lifts <- reactive({
     years_response <- predict(model1,  data.frame(Initial.Training = input$selectYearsTrained,
                                                   Creatine..y.n.="Y", Sex = input$selectGender))
     years_response <- as.numeric(years_response)
     round(years_response, digits = 2)
-    new_bench <- (1 + years_response/100) * as.numeric(input$inputBenchWeight)
     
-    text <- paste("If you have worked out for <b>", input$selectYearsTrained,
-                  "</b> years you would increase your Bench 1RM by <b>", round(years_response, digits = 2), 
-                  "%</b> with creatine. You would go from having a <b>", input$inputBenchWeight, "</b> to having
-                  a <b>",  round(new_bench, digits = 2), "</b> 1RM.", sep = "")
+    if(input$inputWeightMeasure == "pounds") {
+      years_response <- years_response * 2.2
+      new_bench <- (1 + years_response/100) * as.numeric(input$inputBenchWeight)
+      
+      text <- HTML(paste("If you have worked out for <b>", input$selectYearsTrained,
+                         "</b> years you would increase your Bench 1RM by <b>", round(years_response, digits = 2), 
+                         "% </b> without creatine. You would go from having a <b>", input$inputBenchWeight, "lbs</b> to having
+                         a <b>",  round(new_bench, digits = 2), "lbs</b> 1RM in 28 days.", sep = ""))
+    } else {
+      new_bench <- (1 + years_response/100) * as.numeric(input$inputBenchWeight)
+      text <- HTML(paste("If you have worked out for <b>", input$selectYearsTrained,
+                         "</b> years you would increase your Bench 1RM by <b>", round(years_response, digits = 2), 
+                         "%</b> without creatine. You would go from having a <b>", input$inputBenchWeight, "kgs</b> to having
+                  a <b>",  round(new_bench, digits = 2), "kgs</b> 1RM in 28 days.", sep = ""))
+    }
   })
   
-  
-  output$no_creatine_response <- reactive({
+  ### This creates a message displaying how much increase would happen without creatine being taken.
+  output$no_creatine_response_lifts <- reactive({
     years_response <- predict(model1,  data.frame(Initial.Training = input$selectYearsTrained,
                                                   Creatine..y.n.="N", Sex = input$selectGender))
     years_response <- as.numeric(years_response)
-    new_bench <- (1 + years_response/100) * as.numeric(input$inputBenchWeight)
-    text <- HTML(paste("If you have worked out for <b>", input$selectYearsTrained,
+    
+    if(input$inputWeightMeasure == "pounds") {
+      years_response <- years_response * 2.2
+      new_bench <- (1 + years_response/100) * as.numeric(input$inputBenchWeight)
+      
+      text <- HTML(paste("If you have worked out for <b>", input$selectYearsTrained,
+                         "</b> years you would increase your Bench 1RM by <b>", round(years_response, digits = 2), 
+                         "% </b> without creatine. You would go from having a <b>", input$inputBenchWeight, "lbs</b> to having
+                         a <b>",  round(new_bench, digits = 2), "lbs</b> 1RM in 28 days.", sep = ""))
+    } else {
+      new_bench <- (1 + years_response/100) * as.numeric(input$inputBenchWeight)
+      text <- HTML(paste("If you have worked out for <b>", input$selectYearsTrained,
                   "</b> years you would increase your Bench 1RM by <b>", round(years_response, digits = 2), 
-                  "%</b> without creatine. You would go from having a <b>", input$inputBenchWeight, "</b> to having
-                  a <b>",  round(new_bench, digits = 2), "</b> 1RM.", sep = ""))
-  })
+                  "%</b> without creatine. You would go from having a <b>", input$inputBenchWeight, "kgs</b> to having
+                  a <b>",  round(new_bench, digits = 2), "kgs</b> 1RM in 28 days.", sep = ""))
+     }
+    })
 
 
-  
+  ### This group of renders creates the inputs for the user to interact with the artifact.
   output$inputBodyInfo <- renderPrint({input$inputBodyWeight})
   output$inputGenderInfo <- renderPrint({input$selectGender})
-
   output$inputYearsInfo <- renderPrint({input$selectYearsTrained})
   output$inputBenchInfo <- renderPrint({input$inputBenchWeight})
   output$inputSquatInfo <- renderPrint({input$inputSquatWeight})
+  
 
 }
