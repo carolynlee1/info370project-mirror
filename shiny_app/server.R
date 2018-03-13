@@ -1,5 +1,6 @@
 source("../firstmodel.R")
 source("../bodyweight-model.R")
+source("../boxplots.R")
 library(plotly)
 
 
@@ -175,6 +176,13 @@ server <- function(input, output) {
   output$inputYearsInfo <- renderPrint({input$selectYearsTrained})
   output$inputBenchInfo <- renderPrint({input$inputBenchWeight})
   output$inputSquatInfo <- renderPrint({input$inputSquatWeight})
+  
+  ## Plot for showing variance
+  # output$squatVsYears <-plot_ly(Squat ~ Initial.Training, data = d3, main="Effect of Initial Training on Increase in Benchpress 1RM", xlab="Initial Training Years", ylab="% Increase in Squats")
+  # output$bpVsYears <-boxplot(benchpress ~ Initial.Training, data = d3, main="Effect of Initial Training on Increase in Squat 1RM", xlab="Initial Training Years", ylab="% Increase in Benchpress")
+  # output$squatVsSex <- boxplot(Squat ~ Sex, data = d3, main="Effect of Gender on Increase in Squat 1RM", xlab="Sex", ylab="% Increase in Squats")
+  # output$bpVsSex <- boxplot(benchpress ~ Sex, data = d3, main="Effect of Gender on Increase in Benchpress 1RM", xlab="Sex", ylab="% Increase in Benchpress")
+
   
 
 }

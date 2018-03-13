@@ -83,8 +83,10 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                           br(),
                           tags$strong("Here is a graphical comparison:"),
                           br(),
-                          plotlyOutput("grouped_plot")
+                          plotlyOutput("grouped_plot"),
                  
+                          
+                          plotOutput("squatVsYears")
                         )
              )
     )
