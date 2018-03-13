@@ -5,11 +5,9 @@ library(rpart)
 library(statisticalModeling)
 library(dplyr)
 View(d3)
+
 model1 <- rpart(benchpress ~ Initial.Training + Creatine, data = d3, cp=0.001)
 fmodel(model1)
-
-new.d3 <- d3 %>% 
-  filter(Sex == "Male")
 
 ggplot(data = d3, mapping=aes(x=benchpress, y=Initial.Training, color=Creatine)) + geom_point()
 
