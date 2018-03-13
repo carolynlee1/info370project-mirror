@@ -6,9 +6,10 @@ library(statisticalModeling)
 library(dplyr)
 View(d3)
 
-model1 <- rpart(benchpress ~ Initial.Training + Creatine, data = d3, cp=0.001)
-fmodel(model1)
-
+bp.model <- rpart(benchpress ~ Initial.Training + Creatine + Sex, data = d3, cp=0.001)
+squat.model <- rpart(Squat ~ Initial.Training + Creatine + Sex, data = d3, cp=0.001)
+fmodel(bp.model)
+fmodel(squat.model)
 ggplot(data = d3, mapping=aes(x=benchpress, y=Initial.Training, color=Creatine)) + geom_point()
 
 evaluate_model(model1)
