@@ -1,41 +1,53 @@
 source("../firstmodel.R")
+source("../bodyweight-model.R")
 library(plotly)
 
 
 server <- function(input, output) {
   
 
-  output$bench_plot<- renderPlotly({plot_ly( x=c("With Creatine", "Without Creatine"), 
-                                     y=c( predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                                                      With.or.Without ="With")), 
-                                          predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                                                      With.or.Without ="Without"))), type="bar", 
-                                     marker = list(color = c('purple', 'gold'))) %>%  
-      layout(title = "Bench Press Improvement", xaxis = list(title = "Creatine Usage"), yaxis = list(title = "Percentage of Increase"))
-    })
+  # output$bench_plot<- renderPlotly({plot_ly( x=c("With Creatine", "Without Creatine"), 
+  #                                    y=c( predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
+  #                                                                     With.or.Without ="With")), 
+  #                                         predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
+  #                                                                     With.or.Without ="Without"))), type="bar", 
+  #                                    marker = list(color = c('purple', 'gold'))) %>%  
+  #     layout(title = "Bench Press Improvement", xaxis = list(title = "Creatine Usage"), yaxis = list(title = "Percentage of Increase"))
+  #   })
+  # 
+  # 
+  # 
+  # output$squat_plot <- renderPlotly({plot_ly( x=c("With Creatine", "Without Creatine"),
+  #                                           y=c( predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
+  #                                                                            With.or.Without ="With")),
+  #                                                predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
+  #                                                                            With.or.Without ="Without"))), type="bar",
+  #                                           marker = list(color = c('purple', 'gold'))) %>%
+  #     layout(title = "Bench Press Improvement", xaxis = list(title = "Creatine Usage"), yaxis = list(title = "Percentage of Increase"))
+  # })
   
-  
-  
-  output$squat_plot <- renderPlotly({plot_ly( x=c("With Creatine", "Without Creatine"), 
-                                            y=c( predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                                                             With.or.Without ="With")), 
-                                                 predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                                                             With.or.Without ="Without"))), type="bar", 
-                                            marker = list(color = c('purple', 'gold'))) %>%  
-      layout(title = "Bench Press Improvement", xaxis = list(title = "Creatine Usage"), yaxis = list(title = "Percentage of Increase"))
-  })
+  #### not used right now but may be used later
+  # output$bodyweight_plot <- renderPlotly({plot_ly( x=c("With Creatine", "Without Creatine"),
+  #                                             y=c( predict(bodyMassModel,  data.frame(Age = input$inputAge,
+  #                                                                              Creatine=1)),
+  #                                                  predict(bodyMassModel,  data.frame(Age = input$inputAge,
+  #                                                                                     Creatine=0))), type="bar",
+  #                                             marker = list(color = c('purple', 'gold'))) %>%
+  #     layout(title = "Bench Press Improvement", xaxis = list(title = "Creatine Usage"), yaxis = list(title = "Percentage of Increase"))
+  # })
+  # 
   
 
   
   output$grouped_plot <-  renderPlotly({
-    with_creatine_data <- c(predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                           With.or.Without ="With")), 
-               predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                           With.or.Without ="With")))
-    without_creatine_data <- c( predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                            With.or.Without ="Without")), 
-                predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                            With.or.Without ="Without")))
+    with_creatine_data <- c(predict(model1,  data.frame(Initial.Training = input$selectYearsTrained,
+                                                        Creatine..y.n.="Y", Sex = input$selectGender)), 
+               predict(model1,  data.frame(Initial.Training = input$selectYearsTrained,
+                                           Creatine..y.n.="Y", Sex = input$selectGender)))
+    without_creatine_data <- c( predict(model1,  data.frame(Initial.Training = input$selectYearsTrained,
+                                                            Creatine..y.n.="N", Sex = input$selectGender)), 
+                predict(model1,  data.frame(Initial.Training = input$selectYearsTrained,
+                                            Creatine..y.n.="N", Sex = input$selectGender)))
     data %>% 
       plot_ly() %>%
       add_trace(name = 'With Creatine', x = ~c("Bench Press", "Squat"), y = with_creatine_data, type = "bar",
@@ -56,8 +68,8 @@ server <- function(input, output) {
 
 
   output$yes_creatine_response <- reactive({
-    years_response <- predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                                  With.or.Without ="With"))
+    years_response <- predict(model1,  data.frame(Initial.Training = input$selectYearsTrained,
+                                                  Creatine..y.n.="Y", Sex = input$selectGender))
     years_response <- as.numeric(years_response)
     round(years_response, digits = 2)
     new_bench <- (1 + years_response/100) * as.numeric(input$inputBenchWeight)
@@ -70,8 +82,8 @@ server <- function(input, output) {
   
   
   output$no_creatine_response <- reactive({
-    years_response <- predict(model1,  data.frame(Initial.Training.Status..years. = input$selectYearsTrained,
-                                                  With.or.Without ="Without"))
+    years_response <- predict(model1,  data.frame(Initial.Training = input$selectYearsTrained,
+                                                  Creatine..y.n.="N", Sex = input$selectGender))
     years_response <- as.numeric(years_response)
     new_bench <- (1 + years_response/100) * as.numeric(input$inputBenchWeight)
     text <- HTML(paste("If you have worked out for <b>", input$selectYearsTrained,
