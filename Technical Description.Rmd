@@ -1,0 +1,90 @@
+---
+title: "Technical Description"
+output: html_document
+---
+
+## Target Audience and Decision Context
+
+The target audience are people who have committed to a fitness journey, or are curious about how creatine can affect their workout results. With our findings, individuals can make a more informed decision on whether or not taking creatine will help them reach their fitness goals. Users will be able to enter their information and see the difference in their fitness improvement with and without creatine, with this information they can decide if creatine consumption aligns with their fitness goals.
+
+## Dataset and Variables (predictive, outcome)
+
+Our data came from various research articles about creatine and how it affects the body. The studies are well documented and include how the studies were conducted and what their findings are. Majority of our data came from two different studies, Effects of Creatine Supplementation and Resistance Training on Muscle Strength (Rawson study) and Weightlifting Performance and Effects of Creatine Supplementation on Aerobic Power and Cardiovascular Structure and Function (Murphy study). The Rawson study included information about 22 individual studies on creatine with the focus on the effects of gender, interindividual variability, training status, and possible mechanisms of action. From this study, we look at individuals’ sex (Sex), initial years trained before the study was conducted (Years.Trained) , the percentage of increased strength on the bench press one rep max (strengthBP.1RM), the percentage of increased strength in squats one rep max (SQUAT.1RM), and creatine usage (Creatine). With sex, initial years trained, and creatine usage being the predictive variables and the bench press and squat strength being the the outcome variables. The Murphy study included information about the effects of creatine supplementation on endurance exercise. From this study, we look at information about individuals age (Age), creatine usage (Creatine), mass at the beginning of the study (Pre.Mass), mass at the end of the study (Post.Mass) , and the difference of their body mass (Diff). With age and creatine usage being the predictive variables and the difference in the individual’s body mass being the outcome variable. Below is the head of both of our data sets.
+
+Insert reading in the datafile and maybe show the first few rows
+
+```{r}
+# read csv
+Rawson <- read.csv("../inital training and sex data.csv")
+Murphy <- read.csv("../bodyweight.data.csv")
+#show first 6 lines of data sets
+head(Rawson)
+head(Murphy)
+```
+
+## Data Cleaning Process
+
+Our data cleaning process differed for each dataset, but the dataset that required the most cleaning was our bodyweight dataset. For the bodyweight data, we used Tabula to pull the set from a pdf. Because it the data didn’t pull completely cleanly, we wrote an R script that removed a lot of unnecessary parenthesis, replaced the letter I with 1 in a few places, and renamed the column names so that it was more readable. We also changed all of the appropriate types to numerics, and removed an unnecessary empty row. From this process we learned that tools that read data from pdfs are not entirely reliable, and can translate numbers and letters into obscure values. Data cleaning is especially important when pulling from a pdf, and you must be very careful in scanning the data for out-of-place values. Below is a snipet of our data cleaning code.
+
+```{r}
+# Clean Column Names
+names(d2)[3] <- "Pre-Test"
+names(d2)[4] <- "Mid-Test"
+names(d2)[5] <- "Post-Test"
+
+# Remove unnecessary row
+d2 <- d2[-c(1, 22), ]
+
+# Clean data points
+d2[3] <- apply(d2[3], 1, function(x) gsub("[(]((\\d+)|(\\D+))+", "", x))
+d2[3] <- apply(d2[3], 1, function(x) gsub(",|~", ".", x))
+d2[4] <- apply(d2[4], 1, function(x) gsub("[(]((\\d+)|(\\D+))+", "", x))
+d2[4] <- apply(d2[4], 1, function(x) gsub(",|~", ".", x))
+d2[5] <- apply(d2[5], 1, function(x) gsub("[(]((\\d+)|(\\D+))+", "", x))
+d2[5] <- apply(d2[5], 1, function(x) gsub(",|~", ".", x))
+d2[5] <- apply(d2[5], 1, function(x) gsub("I", "1", x))
+
+# Change to numeric values
+d2[3] <- apply(d2[3], 1, function(x) as.numeric(x))
+d2[4] <- apply(d2[4], 1, function(x) as.numeric(x))
+d2[5] <- apply(d2[5], 1, function(x) as.numeric(x))
+
+# Make column for post - pre
+d2$Difference <- d2$`Post-Test` - d2$`Pre-Test`
+
+View(d2)
+
+barplot(main="Body Mass (kg), Placebo", as.matrix(d2[2, c(3, 4, 5)]),
+        xpd=FALSE, ylim=c(83.5, 85.5))
+
+```
+
+## Methods and Justification
+
+The effects of a supplement on a person’s body can be difficult to simply guess, as it depends on multiple factors. Thus, a calculator that takes these factors as inputs and models improvements helps quantify and customize the originally arbitrary numbers. By simply providing these values, our user is better informed about the potential impact of creatine on their body, and is able to determine whether the differences in body mass, weight lifted, etc. are aligned with their fitness goals. We determined that it was important to include the impact of non-creatine as an explicit baseline, because outcomes such as the weight lifted will naturally increase as a user continues to exercise. Our application helps users decide if they would rather see the non-creatine changes in their body, or the creatine changes in their body.
+
+```{r}
+
+```
+
+## Assumptions and Limitations
+
+In our analysis we made assumptions on the people who would be using our tool. We assumed, That our users are people who want to workout and will be committed to a workout schedule, do not have any health conditions that would conflict with creatine consumption, and have access to buy and consume creatine. The main limitation to our analysis is that our data is only from two different sources. While the Rawson study was on 22 individual studies, it only outcome variable was percent strength increase for a couple exercises, and the study did not account for age. The Murphy study was an individual study that did account for age, but there was no way to connect it to the Rawson study, because they were looking at different outcome variables and did not collect the same data in the studies. Going more into the data, there was not an equal representation of males and females in the data, and only young adults participated in the Murphy study. More limitations of our analysis include what inputs and outputs are excluded from our models. In our analysis we did not account for time, how intense and often a participant workout,  muscle growth, amount of creatine consumption, or diet. These variables are important factors in how creatine effects the body, as seen in our causal loop diagram, but the data we collected did not support these factors of the relationship.
+
+## Potential Future Work
+
+To go further with this project, the first step would be to obtain a better suited data set for the analysis we wanted to do. The best way to go about this would be to conduct our own study and collect the data that we identified as important in the causal loop diagram. Once the data is obtained, the models could be expanded to include time, how intense and often a participant workout,  muscle growth, amount of creatine consumption, and diet. With these variables, the relationship between creatine and working out would be simulated more accurately to how it is in the real world. Then we would add these models to our artifact, where our users will be shown important information to help them decide if they want to take creatine or not.
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
