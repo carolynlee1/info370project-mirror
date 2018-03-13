@@ -49,7 +49,11 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                         
                         # Main panel for displaying outputs ----
                         mainPanel(
-
+                          tags$strong("Disclaimer:"), 
+                          p("These numbers are calculated from 
+                            working out four days a week for 28 days. Actual variance can differ with the type of workouts 
+                            done."),
+                          br(),
                           tags$strong("About the calculator:"),
                           p("When committing to a fitness journey, people often debate
                             whether taking supplements would be appropriate. The effect of supplements,
@@ -66,10 +70,13 @@ ui <- fluidPage( theme = shinytheme("cerulean"),
                           htmlOutput("yes_creatine_response_lifts"),
 
                           br(),
-                          tags$strong("Here is how much you would weigh before and after:"),
+                          tags$strong("Here is how much you would weigh after 28 days without creatine:"),
+                          br(),
+                          htmlOutput("no_creatine_response_bodyweight"),
+                          br(),
+                          tags$strong("Here is how much you would weigh after 28 days with creatine:"),
                           br(),
                           htmlOutput("yes_creatine_response_bodyweight"),
-                          htmlOutput("no_creatine_response_bodyweight"),
                           
                           br(),
                           
