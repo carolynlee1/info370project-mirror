@@ -1,6 +1,8 @@
 ---
 title: "Technical Description"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ## Target Audience and Decision Context
@@ -26,7 +28,7 @@ head(Murphy)
 
 Our data cleaning process differed for each dataset, but the dataset that required the most cleaning was our bodyweight dataset. For the bodyweight data, we used Tabula to pull the set from a pdf. Because it the data didn’t pull completely cleanly, we wrote an R script that removed a lot of unnecessary parenthesis, replaced the letter I with 1 in a few places, and renamed the column names so that it was more readable. We also changed all of the appropriate types to numerics, and removed an unnecessary empty row. From this process we learned that tools that read data from pdfs are not entirely reliable, and can translate numbers and letters into obscure values. Data cleaning is especially important when pulling from a pdf, and you must be very careful in scanning the data for out-of-place values. Below is a snipet of our data cleaning code.
 
-```{r}
+```{r, eval=FALSE}
 # Clean Column Names
 names(d2)[3] <- "Pre-Test"
 names(d2)[4] <- "Mid-Test"
